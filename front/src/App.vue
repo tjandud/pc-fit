@@ -34,6 +34,11 @@ export default {
     }
   },
   async created() {
+    // Render 무료 서버 절전 모드 방지용 10분 주기 헬스체크 핑
+    this._keepAliveTimer = setInterval(() => {
+      fetch('https://pc-fit.onrender.com/api/health', { mode: 'no-cors' }).catch(() => {});
+    }, 10 * 60 * 1000);
+
     await this.$store.dispatch('auth/checkSession');
     if (this.isAuthenticated && this.user) {
       this.$store.dispatch('socket/connect');
@@ -42,6 +47,9 @@ export default {
       }, 500);
       this.$store.dispatch('notifications/fetchNotifications');
     }
+  },
+  beforeUnmount() {
+    if (this._keepAliveTimer) clearInterval(this._keepAliveTimer);
   }
 };
 </script>

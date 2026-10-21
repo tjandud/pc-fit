@@ -1402,6 +1402,11 @@ exports.<span class="fn">compareAdvisor</span> = <span class="kw">async</span> (
         toggleFullscreen();
       }
     });
+
+    // 발표자료를 여는 순간 백엔드(Render 무료 서버)를 미리 깨우고 10분마다 절전 방지
+    const wakeBackend = () => fetch('https://pc-fit.onrender.com/api/health', { mode: 'no-cors' }).catch(() => {});
+    wakeBackend();
+    setInterval(wakeBackend, 10 * 60 * 1000);
   </script>
 </body>
 </html>

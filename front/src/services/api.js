@@ -1,8 +1,15 @@
 import axios from 'axios';
 import store from '@/store';
 
+function resolveBaseUrl() {
+  const raw = (process.env.VUE_APP_API_URL || '/api/v1/').trim();
+  if (raw.endsWith('/api')) return `${raw}/v1/`;
+  if (raw.endsWith('/api/')) return `${raw}v1/`;
+  return raw.endsWith('/') ? raw : `${raw}/`;
+}
+
 const api = axios.create({
-  baseURL: process.env.VUE_APP_API_URL || '/api/v1/',
+  baseURL: resolveBaseUrl(),
   timeout: 60000,
   withCredentials: true    // 세션 쿠키 자동 포함 (핵심!)
 });

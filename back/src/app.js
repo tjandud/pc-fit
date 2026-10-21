@@ -51,19 +51,20 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/recommend', recommendRoutes);
-app.use('/api/v1/search', searchRoutes);
-app.use('/api/v1/compatibility', compatibilityRoutes);
-app.use('/api/v1/builds', buildRoutes);
-app.use('/api/v1/takeoffs', takeoffRoutes);
-app.use('/api/v1/youtube', youtubeRoutes);
-
 const notificationRoutes = require('./routes/notificationRoutes');
-app.use('/api/v1/notifications', notificationRoutes);
-
 const adminRoutes = require('./routes/adminRoutes');
-app.use('/api/v1/admin', adminRoutes);
+
+['/api/v1', '/api'].forEach((prefix) => {
+  app.use(`${prefix}/auth`, authRoutes);
+  app.use(`${prefix}/recommend`, recommendRoutes);
+  app.use(`${prefix}/search`, searchRoutes);
+  app.use(`${prefix}/compatibility`, compatibilityRoutes);
+  app.use(`${prefix}/builds`, buildRoutes);
+  app.use(`${prefix}/takeoffs`, takeoffRoutes);
+  app.use(`${prefix}/youtube`, youtubeRoutes);
+  app.use(`${prefix}/notifications`, notificationRoutes);
+  app.use(`${prefix}/admin`, adminRoutes);
+});
 
 // Seed admin account
 const { seedAdmin } = require('./services/adminSeed');
